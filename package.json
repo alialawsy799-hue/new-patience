@@ -1,0 +1,55 @@
+{
+  "name": "patience-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PATIENCE — premium online courses platform (courses, activation codes, progress tracking, store, admin).",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx src/lib/db/migrate.ts",
+    "db:seed": "tsx src/lib/db/seed.ts",
+    "db:reset": "tsx src/lib/db/reset.ts",
+    "codes:generate": "tsx src/scripts/generate-codes.ts",
+    "codes:export": "tsx src/scripts/export-codes.ts",
+    "setup": "npm run db:migrate && npm run db:seed"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "^0.3.4",
+    "@vimeo/player": "^2.30.4",
+    "clsx": "^2.1.1",
+    "drizzle-orm": "^0.44.2",
+    "exceljs": "^4.4.0",
+    "lucide-react": "^0.525.0",
+    "next": "^15.5.23",
+    "pdfkit": "^0.20.2",
+    "pg": "^8.16.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "server-only": "^0.0.1",
+    "tailwind-merge": "^3.3.1",
+    "zod": "^3.25.67"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.6",
+    "@tailwindcss/postcss": "^4.1.11",
+    "@types/node": "^22.15.0",
+    "@types/pdfkit": "^0.17.6",
+    "@types/pg": "^8.15.0",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@types/vimeo__player": "^2.18.3",
+    "drizzle-kit": "^0.31.4",
+    "eslint": "^9.30.0",
+    "eslint-config-next": "^15.5.23",
+    "tailwindcss": "^4.1.11",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=20.11"
+  }
+}

@@ -1,0 +1,6 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 840 800' role='img' aria-label='PATIENCE product placeholder'>
+  <defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#0d0c0d'/><stop offset='1' stop-color='#0d0c0d'/></linearGradient></defs>
+  <rect width='840' height='800' fill='url(#g)'/>
+  <g stroke='#fe6b05' stroke-width='4' opacity='.55'><path d='M140 160 V640'/><path d='M210 160 V640'/><path d='M280 160 V640'/><path d='M350 160 V640'/><path d='M420 160 V640'/><path d='M490 160 V640'/><path d='M560 160 V640'/><path d='M630 160 V640'/><path d='M700 160 V640'/><path d='M140 160 H700'/><path d='M140 230 H700'/><path d='M140 300 H700'/><path d='M140 370 H700'/><path d='M140 440 H700'/><path d='M140 510 H700'/><path d='M140 580 H700'/><path d='M140 650 H700'/></g><rect x='140' y='160' width='560' height='480' rx='14' fill='none' stroke='#fe6b05' stroke-width='9'/>
+  <text x='420' y='740' text-anchor='middle' font-family='Georgia, serif' font-size='30' letter-spacing='10' fill='#ffffff' opacity='.55'>PATIENCE</text>
+ </svg>

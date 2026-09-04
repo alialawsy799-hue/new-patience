@@ -1,0 +1,6 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 840 800' role='img' aria-label='PATIENCE product placeholder'>
+  <defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#5e2117'/><stop offset='1' stop-color='#0d0c0d'/></linearGradient></defs>
+  <rect width='840' height='800' fill='url(#g)'/>
+  <g stroke='#fe6b05' stroke-width='6' stroke-linecap='round' opacity='.9'><path d='M180 190 L180 610'/><path d='M260 150 L260 650'/><path d='M340 190 L340 610'/><path d='M420 150 L420 650'/><path d='M500 190 L500 610'/><path d='M580 150 L580 650'/><path d='M660 190 L660 610'/></g>
+  <text x='420' y='740' text-anchor='middle' font-family='Georgia, serif' font-size='30' letter-spacing='10' fill='#ffffff' opacity='.55'>PATIENCE</text>
+ </svg>
