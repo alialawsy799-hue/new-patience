@@ -39,13 +39,17 @@ function integer(key: string, fallback: number): number {
   return parsed;
 }
 
-const nodeEnv = optional('NODE_ENV', 'development') as 'development' | 'production' | 'test';
-const isProduction = nodeEnv === 'production';
-
 /** `next build` collects pages without the host's runtime secrets. */
 const isBuild =
   process.env.NEXT_PHASE === 'phase-production-build' ||
   process.env.NEXT_PHASE === 'phase-production-compile';
+
+const isVercel = process.env.VERCEL === '1';
+const nodeEnv = (isVercel ? 'production' : optional('NODE_ENV', 'development')) as
+  | 'development'
+  | 'production'
+  | 'test';
+const isProduction = nodeEnv === 'production';
 
 /** Secrets must decode to at least 32 bytes of entropy. */
 function secret(key: string, exactBytes?: number): string {
@@ -71,9 +75,9 @@ function secret(key: string, exactBytes?: number): string {
 const postgresUrl =
   optional('DATABASE_URL') || optional('POSTGRES_URL') || optional('POSTGRES_PRISMA_URL');
 
-const databaseDriver = optional('DATABASE_DRIVER', postgresUrl ? 'postgres' : 'pglite') as
-  | 'pglite'
-  | 'postgres';
+const databaseDriver = (
+  isVercel && !isBuild ? 'postgres' : optional('DATABASE_DRIVER', postgresUrl ? 'postgres' : 'pglite')
+) as 'pglite' | 'postgres';
 if (databaseDriver !== 'pglite' && databaseDriver !== 'postgres') {
   throw new EnvError('DATABASE_DRIVER must be either "pglite" or "postgres".');
 }

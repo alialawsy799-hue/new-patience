@@ -45,22 +45,34 @@ export type StageDetail = {
 export async function listStageCards(studentId: string | null): Promise<StageCard[]> {
   await ensureMigrated();
 
-  const rows = await db
-    .select({
-      stage: stages,
-      lessonCount: sql<number>`(
-        select count(*)::int from ${lessons}
-        where ${lessons.stageId} = ${stages.id} and ${lessons.isPublished} = true
-      )`,
-    })
-    .from(stages)
-    .where(eq(stages.isPublished, true))
-    .orderBy(asc(stages.number));
+  const [stageRows, lessonCounts] = await Promise.all([
+    db
+      .select()
+      .from(stages)
+      .where(eq(stages.isPublished, true))
+      .orderBy(asc(stages.number)),
+    db
+      .select({
+        stageId: lessons.stageId,
+        lessonCount: sql<number>`cast(count(*) as int)`,
+      })
+      .from(lessons)
+      .where(eq(lessons.isPublished, true))
+      .groupBy(lessons.stageId),
+  ]);
+
+  const countByStage = new Map(
+    lessonCounts.map((row) => [row.stageId, Number(row.lessonCount)]),
+  );
+  const rows = stageRows.map((stage) => ({
+    stage,
+    lessonCount: countByStage.get(stage.id) ?? 0,
+  }));
 
   if (!studentId) {
     return rows.map(({ stage, lessonCount }) => ({
       ...stage,
-      lessonCount: Number(lessonCount),
+      lessonCount,
       hasAccess: false,
       completedLessons: 0,
       progressPercent: 0,
