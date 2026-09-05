@@ -1,4 +1,5 @@
 import './load-env';
+import { publicEnv } from './public-env';
 
 /**
  * Typed, validated access to server configuration.
@@ -38,8 +39,20 @@ function integer(key: string, fallback: number): number {
   return parsed;
 }
 
+const nodeEnv = optional('NODE_ENV', 'development') as 'development' | 'production' | 'test';
+const isProduction = nodeEnv === 'production';
+
+/** `next build` collects pages without the host's runtime secrets. */
+const isBuild =
+  process.env.NEXT_PHASE === 'phase-production-build' ||
+  process.env.NEXT_PHASE === 'phase-production-compile';
+
 /** Secrets must decode to at least 32 bytes of entropy. */
 function secret(key: string, exactBytes?: number): string {
+  const raw = process.env[key];
+  if (isBuild && (!raw || raw.trim() === '')) {
+    return Buffer.alloc(exactBytes ?? 32).toString('base64');
+  }
   const value = required(key);
   if (value.startsWith('replace-me')) {
     throw new EnvError(`"${key}" still holds the placeholder value from .env.example.`);
@@ -55,14 +68,15 @@ function secret(key: string, exactBytes?: number): string {
   return value;
 }
 
-const nodeEnv = optional('NODE_ENV', 'development') as 'development' | 'production' | 'test';
-const isProduction = nodeEnv === 'production';
+const postgresUrl =
+  optional('DATABASE_URL') || optional('POSTGRES_URL') || optional('POSTGRES_PRISMA_URL');
 
-const databaseDriver = optional('DATABASE_DRIVER', 'pglite') as 'pglite' | 'postgres';
+const databaseDriver = optional('DATABASE_DRIVER', postgresUrl ? 'postgres' : 'pglite') as
+  | 'pglite'
+  | 'postgres';
 if (databaseDriver !== 'pglite' && databaseDriver !== 'postgres') {
   throw new EnvError('DATABASE_DRIVER must be either "pglite" or "postgres".');
 }
-const isBuild = process.env.NEXT_PHASE === 'phase-production-build';
 if (isProduction && databaseDriver === 'pglite' && !isBuild) {
   throw new EnvError(
     'DATABASE_DRIVER=pglite is a development-only convenience. Set DATABASE_DRIVER=postgres and DATABASE_URL in production.',
@@ -74,11 +88,16 @@ export const env = {
   isProduction,
   isDevelopment: nodeEnv === 'development',
 
-  siteUrl: optional('NEXT_PUBLIC_SITE_URL', 'http://localhost:3000').replace(/\/$/, ''),
+  siteUrl: publicEnv.siteUrl,
 
   database: {
     driver: databaseDriver,
-    url: databaseDriver === 'postgres' ? required('DATABASE_URL') : optional('DATABASE_URL'),
+    url:
+      databaseDriver === 'postgres'
+        ? isBuild
+          ? postgresUrl
+          : postgresUrl || required('DATABASE_URL')
+        : postgresUrl,
     pgliteDir: optional('PGLITE_DATA_DIR', './.data/patience-db'),
   },
 
@@ -122,5 +141,7 @@ export const env = {
     adminLoginWindowMinutes: integer('ADMIN_LOGIN_WINDOW_MINUTES', 15),
   },
 } as const;
+
+export { publicEnv } from './public-env';
 
 export type Env = typeof env;

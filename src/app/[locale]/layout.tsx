@@ -6,7 +6,7 @@ import { fontVariables } from '@/app/fonts';
 import { SiteFooter } from '@/components/layout/site-footer';
 import { SiteHeader } from '@/components/layout/site-header';
 import { ThemeScript } from '@/components/theme/theme-script';
-import { env } from '@/lib/env';
+import { publicEnv } from '@/lib/public-env';
 import {
   THEME_COOKIE,
   getDictionary,
@@ -16,6 +16,8 @@ import {
   localeMeta,
   type Locale,
 } from '@/lib/i18n';
+
+export const dynamic = 'force-dynamic';
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -33,7 +35,7 @@ export async function generateMetadata({
   const title = `${dict.brand.name} — ${dict.brand.tagline}`;
 
   return {
-    metadataBase: new URL(env.siteUrl),
+    metadataBase: new URL(publicEnv.siteUrl),
     title: {
       default: title,
       template: `%s · ${dict.brand.name}`,
