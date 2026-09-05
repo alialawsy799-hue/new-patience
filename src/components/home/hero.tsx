@@ -83,7 +83,7 @@ export function Hero({ locale, stageCount, lessonCount, headline, subheadline }:
 
         <dl className="mt-16 grid animate-[reveal_0.7s_var(--ease-out-quint)_0.32s_both] grid-cols-3 gap-6 border-t border-[var(--border)] pt-8 sm:mt-20 sm:max-w-2xl sm:gap-10">
           {stats.map((stat) => (
-            <div key={stat.label} className="flex flex-col gap-1">
+            <div key={stat.label} className="flex flex-col items-center gap-1 text-center">
               <dt className="order-2 text-[0.8125rem] leading-snug text-[var(--foreground-subtle)]">
                 {stat.label}
               </dt>
